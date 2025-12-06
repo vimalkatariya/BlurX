@@ -7,7 +7,7 @@
 
 		<!-- NuGet Package Info -->
 		<PackageId>BlurX</PackageId>
-		<Version>1.0.1.4</Version>
+		<Version>1.0.0</Version>
 		<Authors>Vimal Katariya</Authors>
 		<Company>BlurX</Company>
 
@@ -17,7 +17,7 @@
 		<!-- Package Metadata -->
 		<PackageTags>masking;data;privacy;pii;phi;security;obfuscation;blurx;utility</PackageTags>
 		<RepositoryUrl>https://github.com/vimalkatariya/blurx</RepositoryUrl>
-		<PackageProjectUrl>https://github.com/mycompany/mylibrary</PackageProjectUrl>
+		<PackageProjectUrl>https://github.com/vimalkatariya/blurx</PackageProjectUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		
 		<!-- Build NuGet Package Automatically -->
