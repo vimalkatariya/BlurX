@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36518.9
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlurX", "BlurX\BlurX.csproj", "{B2204C7F-1E0C-4F6F-96ED-6CFB9757FE50}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleBlurXTest", "ConsoleBlurXTest\ConsoleBlurXTest.csproj", "{74F030D5-AA98-4FA4-AF4D-18584AC29655}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B2204C7F-1E0C-4F6F-96ED-6CFB9757FE50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2204C7F-1E0C-4F6F-96ED-6CFB9757FE50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2204C7F-1E0C-4F6F-96ED-6CFB9757FE50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2204C7F-1E0C-4F6F-96ED-6CFB9757FE50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74F030D5-AA98-4FA4-AF4D-18584AC29655}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74F030D5-AA98-4FA4-AF4D-18584AC29655}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74F030D5-AA98-4FA4-AF4D-18584AC29655}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74F030D5-AA98-4FA4-AF4D-18584AC29655}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {25612187-7E59-404B-A561-1B9F5DEE0F34}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>disable</Nullable>
+
+		<!-- NuGet Package Info -->
+		<!-- NuGet Package Info -->
+		<PackageId>BlurX</PackageId>
+		<Version>1.0.1.4</Version>
+		<Authors>Vimal Katariya</Authors>
+		<Company>BlurX</Company>
+
+		<!-- Update description to match masking functionality -->
+		<Description>General-purpose secure data masking and obfuscation library for .NET.</Description>
+
+		<!-- Package Metadata -->
+		<PackageTags>masking;data;privacy;obfuscation;blurx;utility</PackageTags>
+		<RepositoryUrl>https://github.com/mycompany/mylibrary</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/mycompany/mylibrary</PackageProjectUrl>
+
+		<!-- Build NuGet Package Automatically -->
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+
+		<!-- Optional but recommended -->
+		<RepositoryType>git</RepositoryType>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+	</PropertyGroup>
+
+	<!-- Include README in the package -->
+	<ItemGroup>
+		<None Include="README.md" Pack="true" PackagePath="" />
+	</ItemGroup>
+
+</Project>
