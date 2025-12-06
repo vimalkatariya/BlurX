@@ -6,20 +6,20 @@
 		<Nullable>disable</Nullable>
 
 		<!-- NuGet Package Info -->
-		<!-- NuGet Package Info -->
 		<PackageId>BlurX</PackageId>
 		<Version>1.0.1.4</Version>
 		<Authors>Vimal Katariya</Authors>
 		<Company>BlurX</Company>
 
 		<!-- Update description to match masking functionality -->
-		<Description>General-purpose secure data masking and obfuscation library for .NET.</Description>
+		<Description>Enterprise-grade data masking helpers for .NET.</Description>
 
 		<!-- Package Metadata -->
-		<PackageTags>masking;data;privacy;obfuscation;blurx;utility</PackageTags>
-		<RepositoryUrl>https://github.com/mycompany/mylibrary</RepositoryUrl>
+		<PackageTags>masking;data;privacy;pii;phi;security;obfuscation;blurx;utility</PackageTags>
+		<RepositoryUrl>https://github.com/vimalkatariya/blurx</RepositoryUrl>
 		<PackageProjectUrl>https://github.com/mycompany/mylibrary</PackageProjectUrl>
-
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		
 		<!-- Build NuGet Package Automatically -->
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 
@@ -33,7 +33,8 @@
 
 	<!-- Include README in the package -->
 	<ItemGroup>
-		<None Include="README.md" Pack="true" PackagePath="" />
+		<None Include="README.md" Pack="true" PackagePath="\" />
+		<!--<None Include="LICENSE" Pack="true" PackagePath="\" />-->
 	</ItemGroup>
 
 </Project>
