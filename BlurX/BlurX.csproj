@@ -31,6 +31,10 @@
 
 	</PropertyGroup>
 
+	<ItemGroup>
+	  <Content Include=".github\CODEOWNERS" />
+	</ItemGroup>
+
 	<!-- Include README in the package -->
 	<ItemGroup>
 		<None Include="README.md" Pack="true" PackagePath="\" />
