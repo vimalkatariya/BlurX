@@ -1,7 +1,7 @@
 ﻿namespace BlurX
 {
     [Obsolete("Class-level [BlurX] is under development and currently not supported. " +
-        "Please use [BlurXField] on individual properties. TESING", false)]
+        "Please use [BlurXField] on individual properties.", false)]
     [AttributeUsage(AttributeTargets.Class)]
     public class BlurXAttribute : Attribute
     {
