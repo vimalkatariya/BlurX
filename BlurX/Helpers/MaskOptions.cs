@@ -1,15 +1,14 @@
-﻿namespace BlurX
+﻿namespace Mask.BlurX;
+
+public class MaskOptions
 {
-    public class MaskOptions
-    {
-        public BlurStyle Style { get; set; } = BlurStyle.Default;
+    public BlurStyle Style { get; set; } = BlurStyle.Default;
 
-        public int BlurCharCount { get; set; } = 0;
+    public int BlurCharCount { get; set; } = 0;
 
-        public int VisibleCharCount { get; set; } = 0;
+    public int VisibleCharCount { get; set; } = 0;
 
-        public char BlurChar { get; set; } = '*';
+    public char BlurChar { get; set; } = '*';
 
-        public string RegexPattern { get; set; }
-    }
+    public string RegexPattern { get; set; }
 }
