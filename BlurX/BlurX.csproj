@@ -3,19 +3,28 @@
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
+		<AssemblyName>Mask.BlurX</AssemblyName>
+		<RootNamespace>Mask.BlurX</RootNamespace>
+
 		<Nullable>disable</Nullable>
 
 		<!-- NuGet Package Info -->
-		<PackageId>BlurX</PackageId>
+		<Title>Mask.BlurX</Title>
+
+		<PackageId>Mask.BlurX</PackageId>
+		
 		<Version>1.0.0</Version>
 		<Authors>Vimal Katariya</Authors>
 		<Company>BlurX</Company>
 
 		<!-- Update description to match masking functionality -->
-		<Description>Enterprise-grade data masking helpers for .NET.</Description>
-
+		<Description>BlurX is a lightweight .NET library for masking, blurring,
+			and obfuscating sensitive string data using attributes or global rules.
+		</Description>
+		
 		<!-- Package Metadata -->
-		<PackageTags>masking;data;privacy;pii;phi;security;obfuscation;blurx;utility</PackageTags>
+		<PackageTags>mask; masking; blur; data-protection; pii;obfuscation; security; privacy; blur-text; dotnet</PackageTags>
+		
 		<RepositoryUrl>https://github.com/vimalkatariya/blurx</RepositoryUrl>
 		<PackageProjectUrl>https://github.com/vimalkatariya/blurx</PackageProjectUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
