@@ -1,13 +1,12 @@
-﻿namespace BlurX
+﻿namespace Mask.BlurX;
+
+public enum BlurStyle
 {
-    public enum BlurStyle
-    {
-        Default,
-        Full,
-        Prefix,
-        Suffix,
-        Middle,
-        Email,
-        Regex
-    }
+    Default,
+    Full,
+    Prefix,
+    Suffix,
+    Middle,
+    Email,
+    Regex
 }

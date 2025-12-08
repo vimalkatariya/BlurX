@@ -1,160 +1,156 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace BlurX
+namespace Mask.BlurX;
+
+public static class BlurXMaskEngine
 {
-
-    public static class BlurXMaskEngine
+    public static string Apply(string value, MaskOptions opt)
     {
-        public static string Apply(string value, MaskOptions opt)
+        if (string.IsNullOrWhiteSpace(value))
+            return value;
+
+        opt.BlurCharCount = opt.BlurCharCount <= 0 ? DefaultBlurCharCount(value) : opt.BlurCharCount;
+
+        return opt.Style switch
         {
-            if (string.IsNullOrWhiteSpace(value))
-                return value;
+            BlurStyle.Prefix => MaskPrefix(value, opt),
+            BlurStyle.Suffix => MaskSuffix(value, opt),
+            BlurStyle.Middle => MaskMiddle(value, opt),
+            BlurStyle.Email => MaskEmail(value, opt),
+            BlurStyle.Regex => MaskRegex(value, opt),
+            BlurStyle.Default => MaskByRatio(value, 0.2, opt.BlurCharCount, 0.2, opt.BlurChar),
+            _ => MaskFull(value, opt)
+        };
+    }
 
-            opt.BlurCharCount = opt.BlurCharCount <= 0 ? DefaultBlurCharCount(value) : opt.BlurCharCount;
+    // ----------------------------------------
 
-            return opt.Style switch
-            {
-                BlurStyle.Prefix => MaskPrefix(value, opt),
-                BlurStyle.Suffix => MaskSuffix(value, opt),
-                BlurStyle.Middle => MaskMiddle(value, opt),
-                BlurStyle.Email => MaskEmail(value, opt),
-                BlurStyle.Regex => MaskRegex(value, opt),
-                BlurStyle.Default => MaskByRatio(value, 0.2, 0.2, 0.2, opt.BlurChar),
-                _ => MaskFull(value, opt)
-            };
-        }
+    private static string MaskPrefix(string value, MaskOptions opt)
+    {
+        int visible = Clamp(opt.VisibleCharCount, value.Length);
+        int blur = Clamp(opt.BlurCharCount, value.Length - visible);
 
-        // ----------------------------------------
+        var prefix = value[..visible];
+        var blurred = new string(opt.BlurChar, blur);
+        var remaining = value[(visible + blur)..];
 
-        private static string MaskPrefix(string value, MaskOptions opt)
-        {
-            int visible = Clamp(opt.VisibleCharCount, value.Length);
-            int blur = Clamp(opt.BlurCharCount, value.Length - visible);
+        return prefix + blurred + remaining;
+    }
 
-            var prefix = value[..visible];
-            var blurred = new string(opt.BlurChar, blur);
-            var remaining = value[(visible + blur)..];
+    private static string MaskSuffix(string value, MaskOptions opt)
+    {
+        int visible = Clamp(opt.VisibleCharCount, value.Length);
+        int blur = Clamp(opt.BlurCharCount, value.Length - visible);
 
-            return prefix + blurred + remaining;
-        }
+        var suffix = value[^visible..];
+        var blurred = new string(opt.BlurChar, blur);
+        var remaining = value[..(value.Length - visible - blur)];
 
-        private static string MaskSuffix(string value, MaskOptions opt)
-        {
-            int visible = Clamp(opt.VisibleCharCount, value.Length);
-            int blur = Clamp(opt.BlurCharCount, value.Length - visible);
+        return remaining + blurred + suffix;
+    }
 
-            var suffix = value[^visible..];
-            var blurred = new string(opt.BlurChar, blur);
-            var remaining = value[..(value.Length - visible - blur)];
+    private static string MaskMiddle(string value, MaskOptions opt)
+    {
+        int visible = Clamp(opt.VisibleCharCount, value.Length / 2);
 
-            return remaining + blurred + suffix;
-        }
+        int availableBlurs =
+            value.Length - (visible * 2);
 
-        private static string MaskMiddle(string value, MaskOptions opt)
-        {
-            int visible = Clamp(opt.VisibleCharCount, value.Length / 2);
+        int blur = Clamp(opt.BlurCharCount, availableBlurs);
 
-            int availableBlurs =
-                value.Length - (visible * 2);
+        string prefix = value[..visible];
+        string suffix = value[(value.Length - visible)..];
 
-            int blur = Clamp(opt.BlurCharCount, availableBlurs);
+        int midStart = visible + ((availableBlurs - blur) / 2);
+        string untouchedMiddlePrefix = value[visible..midStart];
+        string untouchedMiddleSuffix = value[(midStart + blur)..(value.Length - visible)];
 
-            string prefix = value[..visible];
-            string suffix = value[(value.Length - visible)..];
+        string blurred = new string(opt.BlurChar, blur);
 
-            int midStart = visible + ((availableBlurs - blur) / 2);
-            string untouchedMiddlePrefix = value[visible..midStart];
-            string untouchedMiddleSuffix = value[(midStart + blur)..(value.Length - visible)];
+        return prefix + untouchedMiddlePrefix + blurred + untouchedMiddleSuffix + suffix;
+    }
 
-            string blurred = new string(opt.BlurChar, blur);
+    private static string MaskFull(string value, MaskOptions opt)
+    {
+        int visible = Clamp(opt.VisibleCharCount, value.Length);
 
-            return prefix + untouchedMiddlePrefix + blurred + untouchedMiddleSuffix + suffix;
-        }
+        int blur = value.Length - visible;
 
-        private static string MaskFull(string value, MaskOptions opt)
-        {
-            int visible = Clamp(opt.VisibleCharCount, value.Length);
+        return new string(opt.BlurChar, blur) + value[^visible..];
+    }
 
-            int blur = value.Length - visible;
+    private static string MaskEmail(string value, MaskOptions opt)
+    {
+        if (!value.Contains('@'))
+            return MaskFull(value, opt);
 
-            return new string(opt.BlurChar, blur) + value[^visible..];
-        }
+        var parts = value.Split('@', 2);
+        var local = parts[0];
+        var domain = parts[1];
 
-        private static string MaskEmail(string value, MaskOptions opt)
-        {
-            if (!value.Contains('@'))
-                return MaskFull(value, opt);
+        int visible = Clamp(opt.VisibleCharCount, local.Length);
+        int blur = Clamp(opt.BlurCharCount, local.Length - visible);
 
-            var parts = value.Split('@', 2);
-            var local = parts[0];
-            var domain = parts[1];
+        var prefix = local[..visible];
+        var masked = new string(opt.BlurChar, blur);
+        var rest = local[(visible + blur)..];
 
-            int visible = Clamp(opt.VisibleCharCount, local.Length);
-            int blur = Clamp(opt.BlurCharCount, local.Length - visible);
+        return $"{prefix}{masked}{rest}@{domain}";
+    }
 
-            var prefix = local[..visible];
-            var masked = new string(opt.BlurChar, blur);
-            var rest = local[(visible + blur)..];
+    private static string MaskRegex(string value, MaskOptions opt)
+    {
+        if (string.IsNullOrWhiteSpace(opt.RegexPattern))
+            return FinishFull(value, opt);
 
-            return $"{prefix}{masked}{rest}@{domain}";
-        }
+        return Regex.Replace(value, opt.RegexPattern, opt.BlurChar.ToString());
+    }
 
-        private static string MaskRegex(string value, MaskOptions opt)
-        {
-            if (string.IsNullOrWhiteSpace(opt.RegexPattern))
-                return FinishFull(value, opt);
+    public static string MaskByRatio(string value, double prefixVisibleRatio, double blurRatio,
+                                     double suffixVisibleRatio, char blurChar = '*')
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return value;
 
-            return Regex.Replace(value, opt.RegexPattern, opt.BlurChar.ToString());
-        }
+        int len = value.Length;
 
-        public static string MaskByRatio(string value, double prefixVisibleRatio, double blurRatio,
-                                         double suffixVisibleRatio, char blurChar = '*')
-        {
-            if (string.IsNullOrWhiteSpace(value))
-                return value;
+        int prefixVisible = (int)Math.Floor(len * prefixVisibleRatio);
+        int blurCount = (int)Math.Floor(len * blurRatio);
+        int suffixVisible = (int)Math.Floor(len * suffixVisibleRatio);
 
-            int len = value.Length;
+        // ✅ Ensure we don't exceed string bounds
+        prefixVisible = Math.Clamp(prefixVisible, 0, len);
+        suffixVisible = Math.Clamp(suffixVisible, 0, len);
 
-            int prefixVisible = (int)Math.Floor(len * prefixVisibleRatio);
-            int blurCount = (int)Math.Floor(len * blurRatio);
-            int suffixVisible = (int)Math.Floor(len * suffixVisibleRatio);
+        int maxBlurAvailable = len - (prefixVisible + suffixVisible);
+        blurCount = Math.Clamp(blurCount, 0, maxBlurAvailable);
 
-            // ✅ Ensure we don't exceed string bounds
-            prefixVisible = Math.Clamp(prefixVisible, 0, len);
-            suffixVisible = Math.Clamp(suffixVisible, 0, len);
+        // ✅ Build result
+        string prefix = value[..prefixVisible];
+        string masked = new string(blurChar, blurCount);
+        string suffix = value[(len - suffixVisible)..];
 
-            int maxBlurAvailable = len - (prefixVisible + suffixVisible);
-            blurCount = Math.Clamp(blurCount, 0, maxBlurAvailable);
+        int untouchedMiddleStart = prefixVisible + blurCount;
+        int untouchedMiddleEnd = len - suffixVisible;
 
-            // ✅ Build result
-            string prefix = value[..prefixVisible];
-            string masked = new string(blurChar, blurCount);
-            string suffix = value[(len - suffixVisible)..];
+        string middleUnchanged =
+            untouchedMiddleStart < untouchedMiddleEnd
+                ? value[untouchedMiddleStart..untouchedMiddleEnd]
+                : string.Empty;
 
-            int untouchedMiddleStart = prefixVisible + blurCount;
-            int untouchedMiddleEnd = len - suffixVisible;
-
-            string middleUnchanged =
-                untouchedMiddleStart < untouchedMiddleEnd
-                    ? value[untouchedMiddleStart..untouchedMiddleEnd]
-                    : string.Empty;
-
-            return prefix + masked + middleUnchanged + suffix;
-        }
-
-
-        private static string FinishFull(string value, MaskOptions opt)
-        {
-            int blur = Clamp(opt.BlurCharCount, value.Length);
-            return new string(opt.BlurChar, blur) + value[blur..];
-        }
-
-        private static int Clamp(int n, int max)
-            => Math.Min(Math.Max(n, 0), max);
-
-        private static int DefaultBlurCharCount(string value, double blurCount = 0.6)
-            => (int)Math.Ceiling(value.Length * 0.6);
+        return prefix + masked + middleUnchanged + suffix;
     }
 
 
+    private static string FinishFull(string value, MaskOptions opt)
+    {
+        int blur = Clamp(opt.BlurCharCount, value.Length);
+        return new string(opt.BlurChar, blur) + value[blur..];
+    }
+
+    private static int Clamp(int n, int max)
+        => Math.Min(Math.Max(n, 0), max);
+
+    private static int DefaultBlurCharCount(string value, double blurCount = 0.6)
+        => (int)Math.Ceiling(value.Length * 0.6);
 }
