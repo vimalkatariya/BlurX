@@ -1,5 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using BlurX;
+using Mask.BlurX;
 
 Console.WriteLine("Hello, World!");
 
