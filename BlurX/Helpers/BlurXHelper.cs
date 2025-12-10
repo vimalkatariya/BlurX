@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using Mask.BlurX.Helpers;
+using System.Reflection;
 
 namespace Mask.BlurX;
 
@@ -9,54 +10,90 @@ public static class BlurXHelper
         if (obj == null)
             return obj;
 
-        // HANDLE COLLECTIONS
-        if (obj is System.Collections.IEnumerable enumerable && obj is not string)
+        try
         {
-            foreach (var item in enumerable)
-                Mask(item, overrideOpt);
-
+            MaskInternal(obj, overrideOpt, new HashSet<object>(Helpers.ReferenceEqualityComparer.Instance));
             return obj;
         }
+        catch
+        {
+            // Any unexpected error → return original object safely
+            return obj;
+        }
+    }
+
+
+    private static void MaskInternal(object obj, MaskOptions options, HashSet<object> visited)
+    {
+        if (obj == null)
+            return;
+
+        if (visited.Contains(obj))
+            return;
+
+        visited.Add(obj);
 
         var type = obj.GetType();
 
-        var props = type.GetProperties()
-                        .Where(p =>
-                            p.CanRead &&
-                            p.CanWrite &&
-                            p.PropertyType == typeof(string))
-                        .ToList();
+        // Skip anonymous objects
+        if (type.IsAnonymousType())
+            return;
 
-        // Check property-level attributes
-        bool hasFieldAttributes =
-            props.Any(p => p.GetCustomAttribute<BlurXFieldAttribute>() != null);
+        // Handle List<string>
+        if (obj is IList<string> stringList)
+        {
+            for (int i = 0; i < stringList.Count; i++)
+            {
+                var value = stringList[i];
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    stringList[i] = BlurXMaskEngine.Apply(value, options);
+                }
+            }
+            return;
+        }
 
-        // Exit only when no masking is needed at all
-        if (!hasFieldAttributes && overrideOpt == null)
-            return obj;
+        // Handle collections of objects: List<T>, IEnumerable<T>
+        if (obj is System.Collections.IEnumerable enumerable && obj is not string)
+        {
+            foreach (var item in enumerable)
+                MaskInternal(item, options, visited);
+
+            return;
+        }
+
+        // Process single object properties using cache
+        var props = MaskPropertyCache.GetProperties(type);
 
         foreach (var prop in props)
         {
-            var value = prop.GetValue(obj) as string;
-            if (string.IsNullOrWhiteSpace(value))
+            var value = prop.GetValue(obj);
+
+            if (value == null)
                 continue;
 
-            var fieldAttr = prop.GetCustomAttribute<BlurXFieldAttribute>();
+            // Mask string property
+            if (prop.PropertyType == typeof(string))
+            {
+                var str = value as string;
 
-            // Determine mask options
-            var options =
-                fieldAttr?.ToOptions()
-                ?? overrideOpt
-                ?? null;   // No fallback needed now
+                if (string.IsNullOrWhiteSpace(str))
+                    continue;
 
-            if (options == null)
-                continue;
+                var fieldAttr = prop.GetCustomAttribute<BlurXFieldAttribute>();
 
-            value = BlurXMaskEngine.Apply(value, options);
+                var opt = fieldAttr?.ToOptions() ?? options;
 
-            prop.SetValue(obj, value);
+                if (opt == null)
+                    continue;
+
+                prop.SetValue(obj, BlurXMaskEngine.Apply(str, opt));
+            }
+            else
+            {
+                // Recurse into nested objects
+                MaskInternal(value, options, visited);
+            }
         }
-
-        return obj;
     }
 }
