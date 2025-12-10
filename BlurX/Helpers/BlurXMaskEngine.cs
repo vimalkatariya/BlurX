@@ -9,6 +9,9 @@ public static class BlurXMaskEngine
         if (string.IsNullOrWhiteSpace(value))
             return value;
 
+        if (opt == null)
+            return value;
+
         opt.BlurCharCount = opt.BlurCharCount <= 0 ? DefaultBlurCharCount(value) : opt.BlurCharCount;
 
         return opt.Style switch
