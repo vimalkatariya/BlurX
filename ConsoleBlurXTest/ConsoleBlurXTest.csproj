@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Bogus" Version="35.6.5" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\BlurX\BlurX.csproj" />
   </ItemGroup>
 
