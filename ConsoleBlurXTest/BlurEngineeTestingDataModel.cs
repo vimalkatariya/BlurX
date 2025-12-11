@@ -99,4 +99,33 @@ namespace ConsoleBlurXTest
 
         public List<RegionalFranchise> Regions { get; set; } = new List<RegionalFranchise>();
     }
+
+    public class UserInfo
+    {
+        [BlurXField(BlurStyle.Email)]
+        public string Email { get; set; }
+
+        [BlurXField(BlurStyle.Regex, regexPattern: @"\d")]
+        public string UserName { get; set; }
+
+        [BlurXField(BlurStyle.Prefix)]
+        public string WorkPhone { get; set; }
+
+        [BlurXField(BlurStyle.Prefix, visibleCharCount: 1)]
+        public string Phone { get; set; }
+        
+        [BlurXField(BlurStyle.Suffix, visibleCharCount: 1)]
+        public string Phone2 { get; set; }
+
+        [BlurXField(BlurStyle.Default)]
+        public string Phone3 { get; set; }
+
+        [BlurXField(BlurStyle.Full)]
+        public string Password { get; set; }
+
+        [BlurXField(BlurStyle.Middle, maskChar: '#', maskLength: 6)]
+        public string CardNumber { get; set; }
+    }
+
+
 }
