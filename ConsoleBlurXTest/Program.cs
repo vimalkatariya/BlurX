@@ -5,16 +5,26 @@ using System.Text.Json;
 
 Console.WriteLine("Hello, World!");
 
-var rootModel = BlurEngineeDataGenerator.GetBlurEngineeData(2);
+#region LargeModel
 
-var maskedModel = BlurXHelper.Mask(rootModel);
+//var rootModel = BlurEngineeDataGenerator.GetBlurEngineeData(2);
+//var maskedModel = BlurXHelper.Mask(rootModel); 
 
-//var options = new JsonSerializerOptions
-//{
-//    WriteIndented = true,           // Pretty print
-//    ReferenceHandler = ReferenceHandler.Preserve, // Handle circular references if any
-//    MaxDepth = 100                  // Increase depth for deep objects
-//};
+#endregion LargeModel
+
+var user = new UserInfo
+{
+    Email = "john.doe@example.com",
+    UserName = "john007.doe",
+    Phone = "9876543210",
+    WorkPhone = "9876543210",
+    Phone2 = "9876543210",
+    Phone3 = "9876543210",
+    Password = "MyStrongPassword123",
+    CardNumber = "4111 1111 1111 1111",
+};
+
+var maskedModel = BlurXHelper.Mask(user);
 
 string json = JsonSerializer.Serialize(maskedModel);
 Console.WriteLine(json);
