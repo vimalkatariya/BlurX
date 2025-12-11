@@ -31,6 +31,14 @@
 		
 		<!-- Build NuGet Package Automatically -->
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageReleaseNotes>
+			Please report bugs or issues here:
+			https://github.com/vimalkatariya/BlurX/issues
+		</PackageReleaseNotes>
+
+		<Contact>vimalkatariya5@gmail.com</Contact>
+		<!-- optional -->
+
 
 		<!-- Optional but recommended -->
 		<RepositoryType>git</RepositoryType>
